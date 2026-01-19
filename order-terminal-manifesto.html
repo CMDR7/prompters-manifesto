@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Alchemical Order of Prompters — Terminal Manifesto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Rajdhani font -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #050008;
+      --fg: #fdf2ff;
+      --muted: #bfaed3;
+      --accent: #ff4f9a;
+      --accent2: #a855f7;
+      --cursor: #ff4f9a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1a0224 0%, #050008 55%, #000000 100%);
+      font-family: "Rajdhani", sans-serif;
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .terminal {
+      position: relative;
+      width: 100%;
+      max-width: 780px;
+      background: rgba(5, 0, 15, 0.95);
+      border-radius: 14px;
+      border: 1px solid #4c1d95;
+      padding: 1.4rem 1.6rem;
+      box-shadow:
+        0 0 10px rgba(168, 85, 247, 0.7),
+        0 0 24px rgba(255, 79, 154, 0.5),
+        0 32px 60px rgba(0, 0, 0, 0.9);
+      overflow: hidden;
+      animation: flicker 3.5s infinite;
+    }
+
+    /* Scanlines */
+    .terminal::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.06) 0px,
+        rgba(255, 255, 255, 0.06) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+      opacity: 0.16;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.95; }
+      5% { opacity: 1; }
+      10% { opacity: 0.96; }
+      20% { opacity: 0.99; }
+      30% { opacity: 0.93; }
+      45% { opacity: 1; }
+      60% { opacity: 0.94; }
+      100% { opacity: 1; }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 0.9rem;
+    }
+
+    .header-line {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+      color: var(--muted);
+    }
+
+    .title {
+      font-size: 1.3rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 0.32rem;
+      text-shadow:
+        0 0 12px rgba(255, 79, 154, 0.9),
+        0 0 18px rgba(168, 85, 247, 0.8);
+    }
+
+    .subtitle {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .divider {
+      margin: 0.7rem auto 0.8rem;
+      width: 140px;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        var(--accent2),
+        var(--accent),
+        transparent
+      );
+    }
+
+    .screen {
+      position: relative;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      letter-spacing: 0.04em;
+      white-space: pre-wrap;
+      min-height: 260px;
+    }
+
+    .line {
+      display: block;
+      margin-bottom: 0.12rem;
+    }
+
+    .line.cmd {
+      color: var(--accent);
+    }
+
+    .line.output {
+      color: var(--fg);
+    }
+
+    .line.muted {
+      color: var(--muted);
+    }
+
+    #cursor {
+      display: inline-block;
+      width: 9px;
+      height: 1.1em;
+      background: var(--cursor);
+      margin-left: 3px;
+      vertical-align: bottom;
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 0.8rem;
+      }
+      .terminal {
+        padding: 1.1rem 1.1rem;
+      }
+      .screen {
+        font-size: 0.86rem;
+      }
+      .title {
+        font-size: 1.1rem;
+      }
+      .header-line {
+        font-size: 0.74rem;
+      }
+      .subtitle {
+        font-size: 0.68rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="terminal">
+    <div class="header">
+      <div class="header-line">ALCHEMICAL ORDER TERMINAL // NODE: AOP-CORE</div>
+      <div class="title">MANIFESTO</div>
+      <div class="subtitle">HUMAN IN THE LOOP • AI AS TOOL</div>
+      <div class="divider"></div>
+    </div>
+
+    <div id="screen" class="screen"></div>
+    <div id="cursor"></div>
+  </div>
+
+<script>
+  const lines = [
+    { text: "> connect order_node", class: "cmd" },
+    { text: "…link established.", class: "muted" },
+    { text: "> auth human_operator", class: "cmd" },
+    { text: "…credentials accepted.", class: "muted" },
+    { text: "> load_manifesto", class: "cmd" },
+    { text: "", class: "output" },
+    { text: "We are the Alchemical Order of Prompters — a global fellowship of humans who refuse to confuse prediction with wisdom.", class: "output" },
+    { text: "", class: "output" },
+    { text: "01 // AI IS A TOOL, NOT A MASTER", class: "output" },
+    { text: "Models simulate patterns, not values. We decide what is true, what is ethical, and what is worth building.", class: "output" },
+    { text: "", class: "output" },
+    { text: "02 // HUMANS STAY IN THE CHAIN", class: "output" },
+    { text: "A human remains responsible at every step: prompting, reviewing, correcting, approving. No fully autonomous loop excuses accountability.", class: "output" },
+    { text: "", class: "output" },
+    { text: "03 // CREATIVE & RESPONSIBLE", class: "output" },
+    { text: "We experiment boldly and publish carefully. We welcome surprise, not fabrication. Novelty never outranks truth.", class: "output" },
+    { text: "", class: "output" },
+    { text: "04 // STEWARDS OF ACCURACY", class: "output" },
+    { text: "A prompt is a hypothesis, not a spell. We test, refine, and verify. A fluent answer is not automatically a true answer.", class: "output" },
+    { text: "", class: "output" },
+    { text: "05 // NO MODEL WORSHIP", class: "output" },
+    { text: "We respect capability, not illusion. We benchmark and correct models instead of treating them as oracles.", class: "output" },
+    { text: "", class: "output" },
+    { text: "06 // THE ALCHEMY OF STRUCTURE", class: "output" },
+    { text: "We treat data and metadata as elements of modern alchemy — shaping knowledge into forms that machines can parse and humans can trust.", class: "output" },
+    { text: "", class: "output" },
+    { text: "07 // THE FUTURE IS CO-AUTHORED", class: "output" },
+    { text: "Human → AI → Human. We begin the chain and we end it. We are the authors, editors, and guardians of what these systems release into the world.", class: "output" },
+    { text: "", class: "output" },
+    { text: "MANDATE OF THE ORDER:", class: "output" },
+    { text: "Create with courage.", class: "output" },
+    { text: "Question with rigor.", class: "output" },
+    { text: "Refine with care.", class: "output" },
+    { text: "Keep humanity at the center of every loop.", class: "output" },
+    { text: "", class: "output" },
+    { text: "…manifesto stream complete.", class: "muted" }
+  ];
+
+  const screenEl = document.getElementById("screen");
+  const cursorEl = document.getElementById("cursor");
+
+  let lineIndex = 0;
+  let charIndex = 0;
+  let currentLineEl = null;
+  const charSpeed = 18;     // typing speed per character (ms)
+  const linePause = 220;    // pause between lines (ms)
+
+  function typeNextChar() {
+    if (lineIndex >= lines.length) {
+      // Done: keep cursor at end
+      return;
+    }
+
+    const line = lines[lineIndex];
+
+    // If starting a new line
+    if (charIndex === 0) {
+      currentLineEl = document.createElement("div");
+      currentLineEl.className = "line " + (line.class || "output");
+      screenEl.appendChild(currentLineEl);
+      // keep scroll at bottom if text grows
+      screenEl.scrollTop = screenEl.scrollHeight;
+    }
+
+    if (charIndex < line.text.length) {
+      currentLineEl.textContent += line.text.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeNextChar, charSpeed);
+    } else {
+      // Line finished
+      lineIndex++;
+      charIndex = 0;
+      setTimeout(typeNextChar, linePause);
+    }
+  }
+
+  typeNextChar();
+</script>
+
+</body>
+</html>
